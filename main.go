@@ -120,9 +120,20 @@ func main() {
 	})
 
 	fmt.Println("🚀 Сервер запущен на http://localhost:8080")
+	fmt.Println("📱 Веб-интерфейс: http://localhost:8090")
 	fmt.Println("Доступные endpoints:")
 	fmt.Println("  GET  /notes  - получить все заметки")
 	fmt.Println("  POST /notes  - создать заметку")
 	fmt.Println("  PUT    /notes/{id} - обновить заметку")
+
+	// Раздача статических файлов (index.html)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/" {
+			http.ServeFile(w, r, "index.html")
+		} else {
+			http.NotFound(w, r)
+		}
+	})
+
 	log.Fatal(http.ListenAndServe(":8090", nil))
 }
