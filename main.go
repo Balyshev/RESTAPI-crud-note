@@ -142,6 +142,7 @@ func main() {
 	fmt.Println("  GET  /notes  - получить все заметки")
 	fmt.Println("  POST /notes  - создать заметку")
 	fmt.Println("  PUT    /notes/{id} - обновить заметку")
+	fmt.Println("  DELETE /notes/{id} - удалить заметку ")
 
 	// Раздача статических файлов (index.html)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
