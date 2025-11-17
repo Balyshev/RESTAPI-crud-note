@@ -96,6 +96,23 @@ func updateZametka(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func deleteZametka(w http.ResponseWriter, r *http.Request) {
+	path := r.URL.Path                           // "notes/5"
+	idStr := strings.TrimPrefix(path, "/notes/") // 5
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID должен быть числом", http.StatusBadRequest)
+	}
+
+	_, exists := zametki[id]
+	if !exists {
+		http.Error(w, "Такой заметки не существует", http.StatusNotFound)
+	}
+
+	delete(zametki, id)
+
+}
+
 func main() {
 	http.HandleFunc("/notes", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
@@ -109,12 +126,12 @@ func main() {
 
 	http.HandleFunc("/notes/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
-			// Если GET - получить заметку по ID
 			getZametkaByID(w, r)
 		} else if r.Method == "PUT" {
 			updateZametka(w, r)
+		} else if r.Method == "DELETE" { // ⭐ ДОБАВЬ ЭТУ СТРОКУ
+			deleteZametka(w, r)
 		} else {
-			// Если другой метод - ошибка
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
 	})
